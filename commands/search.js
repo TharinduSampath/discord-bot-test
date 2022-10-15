@@ -54,15 +54,17 @@ module.exports = {
 
         logger.info("Creating and sending axios get request... ");
         const url = `https://api.jikan.moe/v4/${subcommand === 'anime' ? 'anime' : 'manga'}`;
+
         fetchData(url, 1, search)
             .then(async ({ data }) => {
                 logger.info("Creating embed...");
                 const { current_page, last_visible_page, items } = data.pagination;
+                const description = createDescription(data);
                 const searchEmbed = new EmbedBuilder()
                     .setTitle(`${subcommand === 'anime' ? 'Anime' : 'Manga'} search results for '${search}'`)
                     .addFields(
                         { name: 'Total results', value: items.total.toString(), inline: true })
-                    .setDescription(createDescription(data))
+                    .setDescription(description.length > 0 ? description : "No results found.")
                     .setFooter({ text: `Page 1/${last_visible_page}` });
 
                 logger.info("Sending embed...");
@@ -90,8 +92,9 @@ module.exports = {
                         logger.info("Fetching relevant page...");
                         fetchData(url, page, search)
                             .then(({ data }) => {
+                                const description = createDescription(data);
                                 searchEmbed
-                                    .setDescription(createDescription(data))
+                                    .setDescription(description.length > 0 ? description : "No results found.")
                                     .setFooter({ text: `Page ${page}/${last_visible_page}` });
                                 message.edit({ embeds: [searchEmbed] });
                             })
