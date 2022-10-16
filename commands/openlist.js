@@ -43,7 +43,7 @@ module.exports = {
 
             logger.info("Performing database transactions...");
             const docRef = interaction.client.db.collection('profile').doc(id);
-            let profileDoc = await docRef.get();
+            const profileDoc = await docRef.get();
             if (!profileDoc.exists) {
                 await interaction.editReply('You have not created a profile yet. Please run the **/profile** command to create one.');
             } else {

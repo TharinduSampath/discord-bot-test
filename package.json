@@ -6,12 +6,13 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"predev": "node deploy-commands",
-		"dev": "node index",
-		"start": "node index"
+		"dev": "concurrently --kill-others \"node index\" \"node routine-functions 1m\"",
+		"start": "concurrently --kill-others \"node index\" \"node routine-functions 30m\""
 	},
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"concurrently": "^7.4.0",
 		"dotenv": "^16.0.3",
 		"eslint": "^8.25.0"
 	},
